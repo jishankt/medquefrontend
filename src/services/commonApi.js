@@ -9,7 +9,7 @@
 
 import axios from "axios";
 
-export const BASE_URL = "https://medbackend-zvhu.onrender.com/api";
+export const BASE_URL = import.meta.env.VITE_API_URL + "/api";
 
 const commonApi = (url, method = "GET", data = null, extraHeaders = {}) => {
   const token = sessionStorage.getItem("token");

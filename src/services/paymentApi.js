@@ -1,7 +1,7 @@
 // services/paymentApi.js
 import axios from "axios";
 
-const BASE_URL = "https://medbackend-zvhu.onrender.com/api/payments";
+const BASE_URL = import.meta.env.VITE_API_URL + "/api/payments";
 
 
 export const createOrder = (bookingId) => {
