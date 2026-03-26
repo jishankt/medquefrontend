@@ -1,7 +1,7 @@
 // BookingDetails.jsx — shown after online booking succeeds
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import PayButton from "../Components/PayButton";
+import PayButton from "../components/PayButton";
 
 export function BookingDetails() {
   const { state: b } = useLocation();
