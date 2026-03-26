@@ -1,7 +1,8 @@
 // services/paymentApi.js
 import axios from "axios";
 
-const BASE_URL = import.meta.env.VITE_API_URL + "/api/payments";
+
+export const BASE_URL = import.meta.env.VITE_API_URL + "/api/payments";
 
 
 export const createOrder = (bookingId) => {
