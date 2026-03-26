@@ -1,9 +1,5 @@
 /**
  * allApi.js — MedQueue frontend API calls
- *
- * ⚠️  NOTE: paymentApi.js has been removed.
- *     All payment calls now go through commonApi (this file).
- *     Delete services/paymentApi.js and update any imports.
  */
 
 import commonApi from "./commonApi";
@@ -49,12 +45,12 @@ export const getQueueStatus = (doctorId, session, date) =>
 // ═══════════════════════════════════════════════════════
 // PATIENT — BOOKING
 // ═══════════════════════════════════════════════════════
-export const bookToken             = (payload) => commonApi("/booking/patient/book/",           "POST",   payload);
-export const getBookingHistory     = ()        => commonApi("/booking/patient/history/",        "GET");
-export const cancelBooking         = (id)      => commonApi(`/booking/patient/cancel/${id}/`,   "DELETE");
-export const getPatientTokenStatus = ()        => commonApi("/booking/patient/token-status/",   "GET");
-export const confirmAttendance     = (id)      => commonApi(`/booking/patient/confirm/${id}/`,  "POST");
-export const rejectBooking         = (id)      => commonApi(`/booking/patient/reject/${id}/`,   "POST");
+export const bookToken             = (payload)   => commonApi("/booking/patient/book/",                 "POST", payload);
+export const getBookingHistory     = ()          => commonApi("/booking/patient/history/",              "GET");
+export const cancelBooking         = (id)        => commonApi(`/booking/patient/cancel/${id}/`,         "DELETE");
+export const getPatientTokenStatus = ()          => commonApi("/booking/patient/token-status/",         "GET");
+export const confirmAttendance     = (id)        => commonApi(`/booking/patient/confirm/${id}/`,        "POST");
+export const rejectBooking         = (id)        => commonApi(`/booking/patient/reject/${id}/`,         "POST");
 
 // ═══════════════════════════════════════════════════════
 // DOCTOR
@@ -76,12 +72,12 @@ export const endOPD    = (data) => commonApi("/booking/doctor/end-opd/",    "POS
 // ═══════════════════════════════════════════════════════
 // STAFF — OPD MANAGEMENT
 // ═══════════════════════════════════════════════════════
-export const bookWalkinToken       = (data)      => commonApi("/booking/staff/walkin/",                                                       "POST", data);
-export const getTokensByDate       = (dId, s, d) => commonApi(`/booking/staff/tokens/?doctor_id=${dId}&session=${s}&booking_date=${d}`,        "GET");
-export const getOPDDashboard       = (date = "") => commonApi(`/booking/staff/opd-dashboard/${date ? `?date=${date}` : ""}`,                   "GET");
-export const getDoctorTokensByDate = (dId, d)    => commonApi(`/booking/staff/doctor-tokens/?doctor_id=${dId}&date=${d}`,                      "GET");
-export const approveBooking        = (id)        => commonApi(`/booking/staff/approve/${id}/`,                                                 "POST");
-export const rejectStaffBooking    = (id)        => commonApi(`/booking/staff/reject/${id}/`,                                                  "POST");
+export const bookWalkinToken    = (data)       => commonApi("/booking/staff/walkin/",                              "POST", data);
+export const getTokensByDate    = (dId, s, d)  => commonApi(`/booking/staff/tokens/?doctor_id=${dId}&session=${s}&booking_date=${d}`, "GET");
+export const getOPDDashboard    = (date = "")  => commonApi(`/booking/staff/opd-dashboard/${date ? `?date=${date}` : ""}`, "GET");
+export const getDoctorTokensByDate = (dId, d)  => commonApi(`/booking/staff/doctor-tokens/?doctor_id=${dId}&date=${d}`, "GET");
+export const approveBooking     = (id)         => commonApi(`/booking/staff/approve/${id}/`,                       "POST");
+export const rejectStaffBooking = (id)         => commonApi(`/booking/staff/reject/${id}/`,                        "POST");
 
 // ═══════════════════════════════════════════════════════
 // STAFF — MANUAL PATIENT ACTIONS
@@ -92,13 +88,20 @@ export const staffConfirmAttendance = (id) => commonApi(`/booking/staff/confirm-
 // ═══════════════════════════════════════════════════════
 // STAFF — DOCTOR REGISTRATION APPROVALS
 // ═══════════════════════════════════════════════════════
-export const getPendingDoctors = ()   => commonApi("/booking/staff/pending-doctors/",       "GET");
-export const approveDoctor     = (id) => commonApi(`/booking/staff/approve-doctor/${id}/`,  "POST");
-export const rejectDoctor      = (id) => commonApi(`/booking/staff/reject-doctor/${id}/`,   "POST");
+export const getPendingDoctors = ()    => commonApi("/booking/staff/pending-doctors/",            "GET");
+export const approveDoctor     = (id)  => commonApi(`/booking/staff/approve-doctor/${id}/`,       "POST");
+export const rejectDoctor      = (id)  => commonApi(`/booking/staff/reject-doctor/${id}/`,        "POST");
 
 // ═══════════════════════════════════════════════════════
 // STAFF — CONSULTATION HISTORY
 // ═══════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════
+// PAYMENTS (Razorpay)
+// ═══════════════════════════════════════════════════════
+export const createPaymentOrder = (bookingId) => commonApi("/payments/create-order/", "POST", { booking_id: bookingId });
+export const verifyPayment      = (data)      => commonApi("/payments/verify/",       "POST", data);
+
 export const getConsultationHistory = (date = "", doctorId = "", type = "") => {
   const params = [
     date     ? `date=${date}`          : "",
@@ -108,16 +111,6 @@ export const getConsultationHistory = (date = "", doctorId = "", type = "") => {
   return commonApi(`/booking/staff/consultation-history/${params ? `?${params}` : ""}`, "GET");
 };
 
-// ═══════════════════════════════════════════════════════
-// PAYMENTS (Razorpay)
-// ─────────────────────────────────────────────────────
-// ✅ Unified here — delete services/paymentApi.js
-// ✅ Content-Type and Auth handled by commonApi
-// ═══════════════════════════════════════════════════════
-export const createPaymentOrder = (bookingId) => commonApi("/payments/create-order/", "POST", { booking_id: bookingId });
-export const verifyPayment      = (data)      => commonApi("/payments/verify/",       "POST", data);
-
-// ═══════════════════════════════════════════════════════
-// BOOKING — AVAILABLE DATES
-// ═══════════════════════════════════════════════════════
-export const getAvailableBookingDates = () => commonApi("/booking/available-dates/", "GET");
+// ✅ CORRECT — use commonApi like everything else
+export const getAvailableBookingDates = () =>
+  commonApi("/booking/available-dates/", "GET");

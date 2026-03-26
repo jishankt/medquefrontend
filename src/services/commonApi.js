@@ -14,12 +14,6 @@ export const BASE_URL = import.meta.env.VITE_API_URL + "/api";
 const commonApi = (url, method = "GET", data = null, extraHeaders = {}) => {
   const token = sessionStorage.getItem("token");
 
-  // 🛡️ Guard: warn if URL contains unresolved params
-  if (url.includes("undefined") || url.includes("null")) {
-    console.error(`🚨 commonApi called with bad URL: ${url}`);
-    return Promise.reject(new Error(`Invalid API URL: ${url}`));
-  }
-
   return axios({
     url: `${BASE_URL}${url}`,
     method,
